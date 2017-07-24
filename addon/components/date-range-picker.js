@@ -75,7 +75,7 @@ export default Ember.Component.extend({
   firstDay: 0,
   isInvalidDate: noop,
   isCustomDate: noop,
-
+  
   // Init the dropdown when the component is added to the DOM
   didInsertElement() {
     this._super(...arguments);
@@ -97,6 +97,13 @@ export default Ember.Component.extend({
       Ember.$('.daterangepicker').remove();
     }
   },
+  
+  // Called by the underlying bootstrap date range picker component
+  // whenever anything is changed. Helpful for doing custom functionality
+  // such as overriding what field should display.
+  // Called with three arguments: start, end, and label (the chosen preset
+  // label).
+  callback: noop,
 
   getOptions() {
     let momentStartDate = moment(this.get('start'), this.get('serverFormat'));
@@ -167,7 +174,7 @@ export default Ember.Component.extend({
   },
 
   _setupPicker() {
-    this.$('.daterangepicker-input').daterangepicker(this.getOptions());
+    this.$('.daterangepicker-input').daterangepicker(this.getOptions(), this.callback);
     this.attachPickerEvents();
   },
 
