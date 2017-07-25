@@ -1,7 +1,9 @@
 {{#if label}}
   <label>{{label}}</label>
 {{/if}}
-{{input class='daterangepicker-input form-control' placeholder=placeholder}}
+<div class="daterangepicker-input form-control"> 
+  {{rangeText}}
+</div>
 <div class="hide">
   {{input value=start}}
   {{input value=end}}
