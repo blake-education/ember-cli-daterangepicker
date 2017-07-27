@@ -13,13 +13,18 @@ module.exports = {
   included: function(app) {
     this._super.included.apply(this, arguments);
 
-    this.app.import('vendor/bootstrap-daterangepicker/daterangepicker.js');
-    this.app.import('vendor/bootstrap-daterangepicker/daterangepicker.css');
+    if (typeof app.import !== 'function' && app.app) {
+      app = app.app
+    }
+
+    app.import('vendor/bootstrap-daterangepicker/daterangepicker.js')
+    app.import('vendor/bootstrap-daterangepicker/daterangepicker.css')
   },
 
   treeForVendor: function(vendorTree) {
     var trees = [];
     var daterangepickerPath = path.dirname(require.resolve('bootstrap-daterangepicker'));
+    console.log(daterangepickerPath)
 
     if (vendorTree) {
       trees.push(vendorTree);
