@@ -10,11 +10,11 @@ var fbTransform = require('fastboot-transform');
 module.exports = {
   name: 'ember-cli-daterangepicker',
 
-  included: function(app) {
+  included: function(app, parentAddon) {
     this._super.included.apply(this, arguments);
-
-    this.app.import('vendor/bootstrap-daterangepicker/daterangepicker.js');
-    this.app.import('vendor/bootstrap-daterangepicker/daterangepicker.css');
+    const target = (parentAddon || app)
+    target.import('vendor/bootstrap-daterangepicker/daterangepicker.js');
+    target.import('vendor/bootstrap-daterangepicker/daterangepicker.css');
   },
 
   treeForVendor: function(vendorTree) {
