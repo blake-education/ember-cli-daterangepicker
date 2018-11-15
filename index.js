@@ -1,8 +1,8 @@
-var path = require('path');
+const path = require('path')
 
-var Funnel = require('broccoli-funnel');
-var mergeTrees = require('broccoli-merge-trees');
-var fbTransform = require('fastboot-transform');
+const Funnel = require('broccoli-funnel')
+const mergeTrees = require('broccoli-merge-trees')
+const fbTransform = require('fastboot-transform')
 
 
 module.exports = {
@@ -14,22 +14,22 @@ module.exports = {
     },
   },
 
-  included: function(app, parentAddon) {
-    this._super.included.apply(this, arguments);
+  included(app, parentAddon) {
+    this._super.included.apply(this, arguments)
     const target = (parentAddon || app)
-    target.import('vendor/bootstrap-daterangepicker/daterangepicker.js');
-    target.import('vendor/bootstrap-daterangepicker/daterangepicker.css');
+    target.import('vendor/bootstrap-daterangepicker/daterangepicker.js')
+    target.import('vendor/bootstrap-daterangepicker/daterangepicker.css')
   },
 
-  treeForVendor: function(vendorTree) {
-    var trees = [];
-    var daterangepickerPath = path.dirname(require.resolve('bootstrap-daterangepicker'));
+  treeForVendor(vendorTree) {
+    const trees = []
+    const daterangepickerPath = path.dirname(require.resolve('bootstrap-daterangepicker'))
 
     if (vendorTree) {
-      trees.push(vendorTree);
+      trees.push(vendorTree)
     }
 
-    //need to wrap with check if it's inside fastboot environment
+    // need to wrap with check if it's inside fastboot environment
     trees.push(fbTransform(new Funnel(daterangepickerPath, {
       destDir: 'bootstrap-daterangepicker',
       include: [new RegExp(/\.js$/)],
@@ -37,16 +37,16 @@ module.exports = {
         'moment',
         'moment.min',
         'package',
-        'website'
-      ].map(function(key) {
-        return new RegExp(key + '\.js$');
-      })
-    })));
+        'website',
+      ].map(function (key) {
+        return new RegExp(`${key}\.js$`)
+      }),
+    })))
     trees.push(new Funnel(daterangepickerPath, {
       destDir: 'bootstrap-daterangepicker',
-      include: [new RegExp(/\.css$/)]
-    }));
+      include: [new RegExp(/\.css$/)],
+    }))
 
-    return mergeTrees(trees);
-  }
-};
+    return mergeTrees(trees)
+  },
+}

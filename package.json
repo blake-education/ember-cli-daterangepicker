@@ -11,9 +11,10 @@
     "test:all": "ember try:each"
   },
   "engines": {
-    "node": "6.* || 8.* || >= 10.*"
+    "node": ">= 6.9.2"
   },
   "devDependencies": {
+    "@blakeelearning/eslint-config-blake": "6.0.0",
     "@ember/optional-features": "^0.6.3",
     "ember-cli": "~3.5.1",
     "ember-cli-dependency-checker": "^3.0.0",

@@ -1,11 +1,11 @@
 /* jshint node: true */
 
 module.exports = {
-  normalizeEntityName: function() {},
+  normalizeEntityName() {},
 
-  afterInstall: function() {
+  afterInstall() {
     return this.addPackagesToProject([
-      { name: 'ember-cli-moment-shim' }
-    ]);
-  }
-};
+      { name: 'ember-cli-moment-shim' },
+    ])
+  },
+}

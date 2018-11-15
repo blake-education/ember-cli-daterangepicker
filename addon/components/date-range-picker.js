@@ -1,13 +1,13 @@
-import { assert } from '@ember/debug';
-import $ from 'jquery';
-import Component from '@ember/component';
-import { run } from '@ember/runloop';
-import { isEmpty } from '@ember/utils';
-import { computed } from '@ember/object';
-import moment from 'moment';
-import layout from '../templates/components/date-range-picker';
+import { assert } from '@ember/debug'
+import $ from 'jquery'
+import Component from '@ember/component'
+import { run } from '@ember/runloop'
+import { isEmpty } from '@ember/utils'
+import { computed } from '@ember/object'
+import moment from 'moment'
+import layout from '../templates/components/date-range-picker'
 
-const noop = function() {};
+const noop = function () {}
 
 export default Component.extend({
   layout,
@@ -28,16 +28,16 @@ export default Component.extend({
   parentEl: 'body',
   format: 'MMM D, YYYY',
   serverFormat: 'YYYY-MM-DD',
-  rangeText: computed('start', 'end', function() {
-    let format = this.get('format');
-    let serverFormat = this.get('serverFormat');
-    let start = this.get('start');
-    let end = this.get('end');
+  rangeText: computed('start', 'end', function () {
+    const format = this.get('format')
+    const serverFormat = this.get('serverFormat')
+    const start = this.get('start')
+    const end = this.get('end')
     if (!isEmpty(start) && !isEmpty(end)) {
       return moment(start, serverFormat).format(format) + this.get('separator') +
-        moment(end, serverFormat).format(format);
+        moment(end, serverFormat).format(format)
     }
-    return '';
+    return ''
   }),
   opens: null,
   drops: null,
@@ -53,7 +53,7 @@ export default Component.extend({
     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
     'This Month': [moment().startOf('month'), moment().endOf('month')],
-    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
   },
   daysOfWeek: moment.weekdaysMin(),
   monthNames: moment.monthsShort(),
@@ -74,29 +74,29 @@ export default Component.extend({
   firstDay: 0,
   isInvalidDate: noop,
   isCustomDate: noop,
-  
+
   // Init the dropdown when the component is added to the DOM
   didInsertElement() {
-    this._super(...arguments);
-    this.setupPicker();
+    this._super(...arguments)
+    this.setupPicker()
   },
 
   didUpdateAttrs() {
-    this._super(...arguments);
-    this.setupPicker();
+    this._super(...arguments)
+    this.setupPicker()
   },
 
   // Remove the hidden dropdown when this component is destroyed
   willDestroy() {
-    this._super(...arguments);
+    this._super(...arguments)
 
-    run.cancel(this._setupTimer);
+    run.cancel(this._setupTimer)
 
     if (this.get('removeDropdownOnDestroy')) {
-      $('.daterangepicker').remove();
+      $('.daterangepicker').remove()
     }
   },
-  
+
   // Called by the underlying bootstrap date range picker component
   // whenever anything is changed. Helpful for doing custom functionality
   // such as overriding what field should display.
@@ -105,17 +105,17 @@ export default Component.extend({
   callback: noop,
 
   getOptions() {
-    let momentStartDate = moment(this.get('start'), this.get('serverFormat'));
-    let momentEndDate = moment(this.get('end'), this.get('serverFormat'));
-    let startDate = momentStartDate.isValid() ? momentStartDate : undefined;
-    let endDate = momentEndDate.isValid() ? momentEndDate : undefined;
+    const momentStartDate = moment(this.get('start'), this.get('serverFormat'))
+    const momentEndDate = moment(this.get('end'), this.get('serverFormat'))
+    const startDate = momentStartDate.isValid() ? momentStartDate : undefined
+    const endDate = momentEndDate.isValid() ? momentEndDate : undefined
 
-    let momentMinDate = moment(this.get('minDate'), this.get('serverFormat'));
-    let momentMaxDate = moment(this.get('maxDate'), this.get('serverFormat'));
-    let minDate = momentMinDate.isValid() ? momentMinDate : undefined;
-    let maxDate = momentMaxDate.isValid() ? momentMaxDate : undefined;
+    const momentMinDate = moment(this.get('minDate'), this.get('serverFormat'))
+    const momentMaxDate = moment(this.get('maxDate'), this.get('serverFormat'))
+    const minDate = momentMinDate.isValid() ? momentMinDate : undefined
+    const maxDate = momentMaxDate.isValid() ? momentMaxDate : undefined
 
-    let options = this.getProperties(
+    const options = this.getProperties(
       'isInvalidDate',
       'isCustomDate',
       'alwaysShowCalendars',
@@ -136,9 +136,9 @@ export default Component.extend({
       'linkedCalendars',
       'dateLimit',
       'parentEl'
-    );
+    )
 
-    let localeOptions = this.getProperties(
+    const localeOptions = this.getProperties(
       'applyLabel',
       'cancelLabel',
       'customRangeLabel',
@@ -150,67 +150,65 @@ export default Component.extend({
       'daysOfWeek',
       'monthNames',
       'separator'
-    );
+    )
 
     const defaultOptions = {
       locale: localeOptions,
-      startDate: startDate,
-      endDate: endDate,
-      minDate: minDate,
-      maxDate: maxDate,
-    };
-
-    if (!this.get('singleDatePicker')) {
-      options.ranges = this.get('ranges');
+      startDate,
+      endDate,
+      minDate,
+      maxDate,
     }
 
-    return { ...options, ...defaultOptions };
+    if (!this.get('singleDatePicker')) {
+      options.ranges = this.get('ranges')
+    }
+
+    return { ...options, ...defaultOptions }
   },
 
   setupPicker() {
-    run.cancel(this._setupTimer);
-    this._setupTimer = run.scheduleOnce('afterRender', this, this._setupPicker);
+    run.cancel(this._setupTimer)
+    this._setupTimer = run.scheduleOnce('afterRender', this, this._setupPicker)
   },
 
   _setupPicker() {
-    this.$('.daterangepicker-input').daterangepicker(this.getOptions(), this.callback);
-    this.attachPickerEvents();
+    this.$('.daterangepicker-input').daterangepicker(this.getOptions(), this.callback)
+    this.attachPickerEvents()
   },
 
   attachPickerEvents() {
     this.$('.daterangepicker-input').on('apply.daterangepicker', (ev, picker) => {
-      this.handleDateRangePickerEvent('applyAction', picker);
-    });
+      this.handleDateRangePickerEvent('applyAction', picker)
+    })
 
     this.$('.daterangepicker-input').on('hide.daterangepicker', (ev, picker) => {
-      this.handleDateRangePickerEvent('hideAction', picker);
-    });
+      this.handleDateRangePickerEvent('hideAction', picker)
+    })
 
     this.$('.daterangepicker-input').on('cancel.daterangepicker', () => {
-      this.handleDateRangePickerEvent('cancelAction', undefined, true);
-    });
+      this.handleDateRangePickerEvent('cancelAction', undefined, true)
+    })
   },
 
   handleDateRangePickerEvent(actionName, picker, isCancel = false) {
-    let action = this.get(actionName);
-    let start;
-    let end;
+    const action = this.get(actionName)
+    let start
+    let end
 
     if (!isCancel) {
-      start = picker.startDate.format(this.get('serverFormat'));
-      end = picker.endDate.format(this.get('serverFormat'));
+      start = picker.startDate.format(this.get('serverFormat'))
+      end = picker.endDate.format(this.get('serverFormat'))
     }
 
     if (action) {
       assert(
         `${actionName} for date-range-picker must be a function`,
         typeof action === 'function'
-      );
-      this.sendAction(actionName, start, end, picker);
-    } else {
-      if (!this.isDestroyed) {
-        this.setProperties({ start, end });
-      }
+      )
+      this.sendAction(actionName, start, end, picker)
+    } else if (!this.isDestroyed) {
+      this.setProperties({ start, end })
     }
-  }
-});
+  },
+})
