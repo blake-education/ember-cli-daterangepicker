@@ -1,5 +1,3 @@
-/* jshint node: true */
-'use strict';
 var path = require('path');
 
 var Funnel = require('broccoli-funnel');
@@ -8,7 +6,7 @@ var fbTransform = require('fastboot-transform');
 
 
 module.exports = {
-  name: 'ember-cli-daterangepicker',
+  name: require('./package').name // eslint-disable-line global-require
 
   included: function(app, parentAddon) {
     this._super.included.apply(this, arguments);
