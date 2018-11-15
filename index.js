@@ -6,7 +6,7 @@ var fbTransform = require('fastboot-transform');
 
 
 module.exports = {
-  name: require('./package').name // eslint-disable-line global-require
+  name: require('./package').name, // eslint-disable-line global-require
 
   included: function(app, parentAddon) {
     this._super.included.apply(this, arguments);
