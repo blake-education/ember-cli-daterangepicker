@@ -8,6 +8,12 @@ var fbTransform = require('fastboot-transform');
 module.exports = {
   name: require('./package').name, // eslint-disable-line global-require
 
+  options: {
+    babel: {
+      plugins: ['transform-object-rest-spread'],
+    },
+  },
+
   included: function(app, parentAddon) {
     this._super.included.apply(this, arguments);
     const target = (parentAddon || app)

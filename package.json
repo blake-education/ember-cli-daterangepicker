@@ -49,6 +49,7 @@
     "test": "tests"
   },
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "bootstrap-daterangepicker": "^2.1.25",
     "broccoli-funnel": "^1.0.1",
     "broccoli-merge-trees": "^2.0.0",
