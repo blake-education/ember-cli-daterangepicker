@@ -1,132 +1,138 @@
-import Ember from 'ember';
-import { moduleForComponent, test } from 'ember-qunit';
+import { run } from '@ember/runloop';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import moment from 'moment';
-const { run } = Ember;
 const ASYNC_WAIT_TIME = 500;
 
-moduleForComponent('date-range-picker', 'Integration | Component | Date Range Picker', {
-  integration: true
-});
+module('Integration | Component | Date Range Picker', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('input renders without parameters', function (assert) {
-  assert.expect(1);
-
-  this.render(hbs `
-    {{date-range-picker}}
-  `);
-
-  assert.equal(this.$('.daterangepicker-input').length, 1, 'did not render');
-});
-
-test('input renders with applyAction and cancelAction parameters', function (assert) {
-  assert.expect(1);
-
-  this.on('cancel', function () {
-    console.log('date range change canceled');
+  hooks.beforeEach(function() {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
   });
 
-  this.on('apply', function (startDate, endDate) {
-    console.log('date range updated:', startDate + ' - ' + endDate);
+  test('input renders without parameters', async function(assert) {
+    assert.expect(1);
+
+    await render(hbs `
+      {{date-range-picker}}
+    `);
+
+    assert.dom('.daterangepicker-input').exists({ count: 1 }, 'did not render');
   });
 
-  this.render(hbs `
-    {{date-range-picker
-      start="20140101"
-      end="20141231"
-      serverFormat="YYYYMMDD"
-      applyAction=(action "apply")
-      cancelAction=(action "cancel")
-    }}
-  `);
+  test('input renders with applyAction and cancelAction parameters', async function(assert) {
+    assert.expect(1);
 
-  assert.equal(this.$('.daterangepicker-input').length, 1, 'did not render');
-});
+    this.actions.cancel = function () {
+      console.log('date range change canceled');
+    };
 
-test('input renders empty with autoUpdateInput parameter', function (assert) {
-  assert.expect(1);
+    this.actions.apply = function (startDate, endDate) {
+      console.log('date range updated:', startDate + ' - ' + endDate);
+    };
 
-  this.render(hbs `
-    {{date-range-picker
-      autoUpdateInput=false
-    }}
-  `);
+    await render(hbs `
+      {{date-range-picker
+        start="20140101"
+        end="20141231"
+        serverFormat="YYYYMMDD"
+        applyAction=(action "apply")
+        cancelAction=(action "cancel")
+      }}
+    `);
 
-  assert.equal(this.$('.daterangepicker-input').val(), '', 'input is not empty');
-});
+    assert.dom('.daterangepicker-input').exists({ count: 1 }, 'did not render');
+  });
 
-test('dropdown menu renders', function (assert) {
-  assert.expect(1);
+  test('input renders empty with autoUpdateInput parameter', async function(assert) {
+    assert.expect(1);
 
-  this.render(hbs `
-    <div id="wrapper">{{date-range-picker parentEl='#wrapper'}}</div>
-  `);
+    await render(hbs `
+      {{date-range-picker
+        autoUpdateInput=false
+      }}
+    `);
 
-  assert.equal(this.$('.daterangepicker.dropdown-menu').length, 1, 'did not render');
-});
+    assert.dom('.daterangepicker-input').hasValue('', 'input is not empty');
+  });
 
-test('value changes when choosing Last 7 Days date range', function (assert) {
-  let inputText,
-    done = assert.async(),
-    dateRange = moment().subtract(6, 'days').format('MMM D, YYYY') + ' - ' + moment().format('MMM D, YYYY');
+  test('dropdown menu renders', async function(assert) {
+    assert.expect(1);
 
-  assert.expect(2);
+    await render(hbs `
+      <div id="wrapper">{{date-range-picker parentEl='#wrapper'}}</div>
+    `);
 
-  this.render(hbs `
-    <div id="wrapper">
-    {{date-range-picker
-      start="20160102"
-      end="20160228"
-      parentEl="#wrapper"
-    }}</div>
-  `);
+    assert.dom('.daterangepicker.dropdown-menu').exists({ count: 1 }, 'did not render');
+  });
 
-  assert.equal(this.$('.daterangepicker-input').val(), 'Jan 2, 2016 - Feb 28, 2016', 'date range did not match');
+  test('value changes when choosing Last 7 Days date range', async function(assert) {
+    let inputText,
+      done = assert.async(),
+      dateRange = moment().subtract(6, 'days').format('MMM D, YYYY') + ' - ' + moment().format('MMM D, YYYY');
 
-  // open dropdown
-  this.$('.daterangepicker-input').click();
+    assert.expect(2);
 
-  run.later(() => {
-    this.$('.dropdown-menu .ranges ul > li:nth-child(3)').click();
-    inputText = this.$('.daterangepicker-input').val();
-    assert.equal(inputText, dateRange, 'new date range did not match');
-    done();
-  }, ASYNC_WAIT_TIME);
+    await render(hbs `
+      <div id="wrapper">
+      {{date-range-picker
+        start="20160102"
+        end="20160228"
+        parentEl="#wrapper"
+      }}</div>
+    `);
 
-});
+    assert.dom('.daterangepicker-input').hasValue('Jan 2, 2016 - Feb 28, 2016', 'date range did not match');
 
-test('calendar renders with expected date parameters', function (assert) {
-  let done = assert.async();
+    // open dropdown
+    await click('.daterangepicker-input');
 
-  this.start = '20140101';
-  this.end = '20141231';
+    run.later(async () => {
+      await click('.dropdown-menu .ranges ul > li:nth-child(3)');
+      inputText = find('.daterangepicker-input').value;
+      assert.equal(inputText, dateRange, 'new date range did not match');
+      done();
+    }, ASYNC_WAIT_TIME);
 
-  assert.expect(4);
+  });
 
-  this.render(hbs `
-    <div id="wrapper">
-    {{date-range-picker
-      start=start
-      end=end
-      serverFormat="YYYYMMDD"
-      format="YYYYMMDD"
-      parentEl="#wrapper"
-    }}
-    </div>
-  `);
+  test('calendar renders with expected date parameters', async function(assert) {
+    let done = assert.async();
 
-  assert.equal(this.$('.dropdown-menu').hasClass('show-calendar'), false, 'dropdown menu has show-calendar class');
+    this.start = '20140101';
+    this.end = '20141231';
 
-  // open drowdown
-  this.$('.daterangepicker-input').click();
+    assert.expect(4);
 
-  run.later(() => {
-    assert.equal(this.$('.dropdown-menu').hasClass('show-calendar'), true, 'dropdown menu doesnt have show-calendar class');
+    await render(hbs `
+      <div id="wrapper">
+      {{date-range-picker
+        start=start
+        end=end
+        serverFormat="YYYYMMDD"
+        format="YYYYMMDD"
+        parentEl="#wrapper"
+      }}
+      </div>
+    `);
 
-    assert.equal(this.$('.calendar.left .daterangepicker_input input').val(), this.get('start'), 'start date in calendar input does not match');
+    assert.dom('.dropdown-menu').hasNoClass('show-calendar', 'dropdown menu has show-calendar class');
 
-    assert.equal(this.$('.calendar.right .daterangepicker_input input').val(), this.get('end'), 'end date in calendar input does not match');
+    // open drowdown
+    await click('.daterangepicker-input');
 
-    done();
-  }, ASYNC_WAIT_TIME);
+    run.later(() => {
+      assert.dom('.dropdown-menu').hasClass('show-calendar', 'dropdown menu doesnt have show-calendar class');
+
+      assert.dom('.calendar.left .daterangepicker_input input').hasValue(this.get('start'), 'start date in calendar input does not match');
+
+      assert.dom('.calendar.right .daterangepicker_input input').hasValue(this.get('end'), 'end date in calendar input does not match');
+
+      done();
+    }, ASYNC_WAIT_TIME);
+  });
 });

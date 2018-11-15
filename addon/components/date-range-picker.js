@@ -1,16 +1,15 @@
-import Ember from 'ember';
+import { assert } from '@ember/debug';
+import $ from 'jquery';
+import Component from '@ember/component';
+import { run } from '@ember/runloop';
+import { isEmpty } from '@ember/utils';
+import { computed } from '@ember/object';
 import moment from 'moment';
 import layout from '../templates/components/date-range-picker';
 
-const {
-  run,
-  isEmpty,
-  computed
-} = Ember;
-
 const noop = function() {};
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['form-group'],
   attributeBindings: ['start', 'end', 'serverFormat'],
@@ -94,7 +93,7 @@ export default Ember.Component.extend({
     run.cancel(this._setupTimer);
 
     if (this.get('removeDropdownOnDestroy')) {
-      Ember.$('.daterangepicker').remove();
+      $('.daterangepicker').remove();
     }
   },
   
@@ -203,7 +202,7 @@ export default Ember.Component.extend({
     }
 
     if (action) {
-      Ember.assert(
+      assert(
         `${actionName} for date-range-picker must be a function`,
         typeof action === 'function'
       );
