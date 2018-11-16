@@ -6,13 +6,14 @@ import { isEmpty } from '@ember/utils'
 import { computed } from '@ember/object'
 import moment from 'moment'
 import layout from '../templates/components/date-range-picker'
+import { safeProperty } from '@blakeelearning/ember-cli-daterangepicker/utils/prevent-leaking-state'
 
 const noop = function () {}
 
 export default Component.extend({
   layout,
-  classNames: ['form-group'],
-  attributeBindings: ['start', 'end', 'serverFormat'],
+  classNames: safeProperty(['form-group']),
+  attributeBindings: safeProperty(['start', 'end', 'serverFormat']),
   start: undefined,
   end: undefined,
   minDate: undefined,
@@ -44,17 +45,17 @@ export default Component.extend({
   separator: ' - ',
   singleDatePicker: false,
   placeholder: null,
-  buttonClasses: ['btn'],
+  buttonClasses: safeProperty(['btn']),
   applyClass: null,
   cancelClass: null,
-  ranges: {
+  ranges: safeProperty({
     'Today': [moment(), moment()],
     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
     'This Month': [moment().startOf('month'), moment().endOf('month')],
     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-  },
+  }),
   daysOfWeek: moment.weekdaysMin(),
   monthNames: moment.monthsShort(),
   removeDropdownOnDestroy: false,
@@ -76,19 +77,19 @@ export default Component.extend({
   isCustomDate: noop,
 
   // Init the dropdown when the component is added to the DOM
-  didInsertElement() {
-    this._super(...arguments)
+  didInsertElement(...args) {
+    this._super(...args)
     this.setupPicker()
   },
 
   didUpdateAttrs() {
-    this._super(...arguments)
+    this._super()
     this.setupPicker()
   },
 
   // Remove the hidden dropdown when this component is destroyed
-  willDestroy() {
-    this._super(...arguments)
+  willDestroy(...args) {
+    this._super(...args)
 
     run.cancel(this._setupTimer)
 
