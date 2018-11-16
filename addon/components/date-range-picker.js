@@ -3,7 +3,7 @@ import $ from 'jquery'
 import Component from '@ember/component'
 import { run } from '@ember/runloop'
 import { isEmpty } from '@ember/utils'
-import { computed } from '@ember/object'
+import { computed, get } from '@ember/object'
 import moment from 'moment'
 import layout from '../templates/components/date-range-picker'
 import { safeProperty } from '@blakeelearning/ember-cli-daterangepicker/utils/prevent-leaking-state'
@@ -193,7 +193,7 @@ export default Component.extend({
   },
 
   handleDateRangePickerEvent(actionName, picker, isCancel = false) {
-    const action = this.get(actionName)
+    const action = get(this, actionName)
     let start
     let end
 
@@ -207,7 +207,7 @@ export default Component.extend({
         `${actionName} for date-range-picker must be a function`,
         typeof action === 'function'
       )
-      this.sendAction(actionName, start, end, picker)
+      action.call(this, start, end, picker)
     } else if (!this.isDestroyed) {
       this.setProperties({ start, end })
     }
