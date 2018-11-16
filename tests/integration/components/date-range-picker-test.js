@@ -1,7 +1,7 @@
 import { run } from '@ember/runloop'
 import { module, test } from 'qunit'
 import { setupRenderingTest } from 'ember-qunit'
-import { render, click, find, findAll } from '@ember/test-helpers'
+import { render, click, find } from '@ember/test-helpers'
 import hbs from 'htmlbars-inline-precompile'
 import moment from 'moment'
 const ASYNC_WAIT_TIME = 500
@@ -71,9 +71,9 @@ module('Integration | Component | Date Range Picker', function (hooks) {
   })
 
   test('value changes when choosing Last 7 Days date range', async function (assert) {
-    let inputText,
-      done = assert.async(),
-      dateRange = `${moment().subtract(6, 'days').format('MMM D, YYYY')} - ${moment().format('MMM D, YYYY')}`
+    let inputText
+    const done = assert.async()
+    const dateRange = `${moment().subtract(6, 'days').format('MMM D, YYYY')} - ${moment().format('MMM D, YYYY')}`
 
     assert.expect(2)
 
