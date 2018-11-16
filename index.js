@@ -14,8 +14,8 @@ module.exports = {
     },
   },
 
-  included(app, parentAddon) {
-    this._super.included.apply(this, arguments)
+  included(app, parentAddon, ...otherArgs) {
+    this._super.included.apply(this, app, parentAddon, ...otherArgs)
     const target = (parentAddon || app)
     target.import('vendor/bootstrap-daterangepicker/daterangepicker.js')
     target.import('vendor/bootstrap-daterangepicker/daterangepicker.css')
@@ -39,7 +39,7 @@ module.exports = {
         'package',
         'website',
       ].map(function (key) {
-        return new RegExp(`${key}\.js$`)
+        return new RegExp(`${key}\\.js$`)
       }),
     })))
     trees.push(new Funnel(daterangepickerPath, {
