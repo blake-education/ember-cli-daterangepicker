@@ -1,3 +1,3 @@
-import DateRangePickerComponent from 'ember-cli-daterangepicker/components/date-range-picker'
+import DateRangePickerComponent from '@blakeelearning/ember-cli-daterangepicker/components/date-range-picker'
 
 export default DateRangePickerComponent

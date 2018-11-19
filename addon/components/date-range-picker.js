@@ -5,14 +5,14 @@ import { run } from '@ember/runloop'
 import { isEmpty } from '@ember/utils'
 import { computed, get } from '@ember/object'
 import moment from 'moment'
-import layout from '../templates/components/date-range-picker'
+import layout from '@blakeelearning/ember-cli-daterangepicker/templates/components/date-range-picker'
 import { safeProperty } from '@blakeelearning/ember-cli-daterangepicker/utils/prevent-leaking-state'
 
 const noop = function () {}
 
 export default Component.extend({
   layout,
-  classNames: safeProperty(['form-group']),
+  classNames: ['form-group'],
   attributeBindings: safeProperty(['start', 'end', 'serverFormat']),
   start: undefined,
   end: undefined,
