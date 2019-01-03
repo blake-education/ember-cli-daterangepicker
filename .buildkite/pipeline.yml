@@ -1,6 +1,6 @@
 steps:
-  - label: ":ember: test (ember exam)"
-    command: "script/ci/dependent-testing.sh"
+  - label: ":ember: test"
+    command: "yarn; npm test"
     agents:
       - "queue=generic-v3"
     plugins:
