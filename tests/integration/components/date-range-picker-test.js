@@ -57,7 +57,7 @@ module('Integration | Component | Date Range Picker', function (hooks) {
       }}
     `)
 
-    assert.dom('.daterangepicker-input').hasValue('', 'input is not empty')
+    assert.dom('.daterangepicker-input').lacksAttribute('value', 'input is not empty')
   })
 
   test('dropdown menu renders', async function (assert) {
