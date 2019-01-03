@@ -17,4 +17,4 @@ npm-debug.log*
 testem.log
 
 # ember test
-.node_modules
+.node_modules.ember-try
