@@ -1,6 +1,6 @@
 steps:
   - label: ":ember: test"
-    command: "yarn; npm test"
+    command: "scripts/tests.sh"
     agents:
       - "queue=generic-v3"
     plugins:
