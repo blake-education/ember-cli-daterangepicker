@@ -1,0 +1,13 @@
+steps:
+  - label: ":ember: test"
+    command: "scripts/tests.sh"
+    agents:
+      - "queue=generic-v3"
+    plugins:
+      - ssh://git@github.com/blake-education/tester-standalone-buildkite-plugin.git#v0.1:
+          blake-test-type: "nodejs-6.9.2"
+    timeout: 90
+    retry:
+      automatic:
+        - exit_status: "*"
+          limit: 1
